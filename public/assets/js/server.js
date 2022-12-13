@@ -52,6 +52,7 @@ app.post('/api/notes', (req, res) => {
 
 
 });
+//API delete route to handle delete requests. By running the filter method on the parsed DB data, a new array is created with only the undeleted notes.
 app.delete('/api/notes/:id', (req, res)=>{
     fs.readFile('../../../db/db.json', 'utf-8', (err, data)=>{
         if(err){
@@ -65,6 +66,8 @@ app.delete('/api/notes/:id', (req, res)=>{
             fs.writeFile('../../../db/db.json', JSON.stringify(undeletedNotes, null, 4), (err)=> err ? console.error(err): console.info('Successfully deleted note.'));
         }
     })
+    //This will redirect to the origial url path of /notes, essentially like refreshing the page so that the notes list will render with the deleted note no longer present.
+    res.redirect('');
 })
 
 app.listen(PORT, ()=>
