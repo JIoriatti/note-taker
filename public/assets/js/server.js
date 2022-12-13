@@ -32,17 +32,16 @@ app.post('/api/notes', (req, res) => {
         const newNote = {
             title,
             text,
-            note_id: randomUUID()
+            id: randomUUID()
         };
         fs.readFile('../../../db/db.json', 'utf-8', (err, data)=>{
             if(err){
                 console.log(err);
             }
             else{
-                const parsedNote = JSON.parse(data);
-                parsedNote.push(newNote);
-                fs.writeFile('../../../db/db.json', JSON.stringify(parsedNote, null, 4), (err)=> err ? console.error(err): console.info('Successfully updated notes.'));
-                console.log(parsedNote);
+                const parsedNotes = JSON.parse(data);
+                parsedNotes.push(newNote);
+                fs.writeFile('../../../db/db.json', JSON.stringify(parsedNotes, null, 4), (err)=> err ? console.error(err): console.info('Successfully updated notes.'));
             }
         })
         res.json(`Note Saved.`);
@@ -53,5 +52,20 @@ app.post('/api/notes', (req, res) => {
 
 
 });
+app.delete('/api/notes/:id', (req, res)=>{
+    fs.readFile('../../../db/db.json', 'utf-8', (err, data)=>{
+        if(err){
+            console.log(err);
+        }
+        else{
+            const parsedNotes = JSON.parse(data);
+            const undeletedNotes = parsedNotes.filter(function(note){
+                return note.id !== req.params.id;
+            })
+            fs.writeFile('../../../db/db.json', JSON.stringify(undeletedNotes, null, 4), (err)=> err ? console.error(err): console.info('Successfully deleted note.'));
+        }
+    })
+})
+
 app.listen(PORT, ()=>
 console.log (`Application listening at http://localhost:${PORT}`));
