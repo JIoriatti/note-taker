@@ -5,7 +5,7 @@ const fs = require('fs');
 const notes = require('../../../db/db.json');
 //Using the crypto module to use the randomUUID method to generate a random ID string for each note.
 const { randomUUID } = require('crypto');
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 //Middleware for automatic jason conversion, url encoded data, and static file serving.
 app.use(express.json());
