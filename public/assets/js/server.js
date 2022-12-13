@@ -10,7 +10,7 @@ const PORT = process.env.PORT || 3001;
 //Middleware for automatic jason conversion, url encoded data, and static file serving.
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
-app.use(express.static('../../../public'));
+app.use(express.static('public'));
 
 //Route for front page/index.html.
 app.get('/', (req, res)=>
