@@ -2,7 +2,7 @@ const express = require('express');
 const app = express();
 const path = require('path');
 const fs = require('fs');
-const notes = require('../../../db/db.json');
+const notes = require('./db/db.json');
 //Using the crypto module to use the randomUUID method to generate a random ID string for each note.
 const { randomUUID } = require('crypto');
 const PORT = process.env.PORT || 3001;
@@ -14,15 +14,15 @@ app.use(express.static('public'));
 
 //Route for front page/index.html.
 app.get('/', (req, res)=>
-    res.sendFile(path.join(__dirname, 'public/index.html'))
+    res.sendFile(path.join(__dirname, './public/index.html'))
 );
 //Route for when the user clicks the 'Get Started' button.
 app.get('/notes', (req, res)=>
-    res.sendFile(path.join(__dirname, 'public/notes.html'))
+    res.sendFile(path.join(__dirname, './public/notes.html'))
 );
 //API route for fetching the saved notes within the database json file.
 app.get('/api/notes', (req, res)=>{
-    let data = fs.readFileSync('db/db.json', 'utf-8');
+    let data = fs.readFileSync('./db/db.json', 'utf-8');
     res.json(JSON.parse(data));
 });
 //API route for posting/saving a note to the database/db.json file. Uses the randomUUID() method to assign a randomly generated ID string to each note.
@@ -34,14 +34,14 @@ app.post('/api/notes', (req, res) => {
             text,
             id: randomUUID()
         };
-        fs.readFile('db/db.json', 'utf-8', (err, data)=>{
+        fs.readFile('./db/db.json', 'utf-8', (err, data)=>{
             if(err){
                 console.log(err);
             }
             else{
                 const parsedNotes = JSON.parse(data);
                 parsedNotes.push(newNote);
-                fs.writeFile('db/db.json', JSON.stringify(parsedNotes, null, 4), (err)=> err ? console.error(err): console.info('Successfully updated notes.'));
+                fs.writeFile('./db/db.json', JSON.stringify(parsedNotes, null, 4), (err)=> err ? console.error(err): console.info('Successfully updated notes.'));
             }
         })
         res.json(`Note Saved.`);
